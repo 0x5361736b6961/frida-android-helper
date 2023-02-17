@@ -13,20 +13,13 @@ def take_screenshot(filename=None):
             filename = "{}_{}.png".format(signature, filename)
 
         try:
+            pid, app, activity = get_current_app_focus(device)
+            eprint("🔥 Trying to disable SECURE flag for {}.{}...".format(app, activity))
+            disable_secure_flag(device, pid, activity)
             result = device.screencap()
             with open(filename, "wb") as f:
                 f.write(result)
             eprint("🔥 Screenshot saved {}".format(filename))
-        except IndexError:
-            eprint("⚠️  Activity protected by SECURE flag...")
-            app, activity = get_current_app_focus(device)
-            if not activity: continue
-            eprint("🔥 Trying to disable SECURE flag for {}.{}...".format(app, activity))
-            disable_secure_flag(device, app, activity)
-            try:
-                result = device.screencap()
-                with open(filename, "wb") as f:
-                    f.write(result)
-                eprint("🔥 Screenshot saved {}".format(filename))
-            except IndexError:
-                eprint("❌️ SECURE flag bypass probably didn't work...")
+        except:
+            eprint("❌️ Failed...")
+            raise

@@ -7,7 +7,7 @@ def take_snapshot(packagename=None):
     for device in get_devices():
         eprint("📲 Device: {} ({})".format(get_device_model(device), device.get_serial_no()))
         if packagename is None:  # get
-            packagename, _ = get_current_app_focus(device)
+            pid, packagename, _ = get_current_app_focus(device)
             if packagename == "StatusBar":
                 eprint("❌️ Unlock device or specify package name.")
                 continue

@@ -61,11 +61,14 @@ def get_architecture(device: Device):
 def get_current_app_focus(device: Device):
     # Sample: mCurrentFocus=Window{127ced0 u0 com.android.launcher3/com.android.searchlauncher.SearchLauncher}
     # When locked: mCurrentFocus=Window{8f41b66 u0 StatusBar}
-    result = perform_cmd(device, "dumpsys window windows | grep mCurrentFocus")
+    
+    pid = perform_cmd(device, "dumpsys activity | grep top-activity | cut -d':' -f 3 | awk '{ print $2 }'")
+    result = perform_cmd(device, "dumpsys activity top | grep " + pid)
 
-    currentFocus = result.strip("\r\n{}").split(" ")[-1]
+    currentFocus = result.strip().split(" ")[1]
     if "/" in currentFocus:
-        return currentFocus.split("/")
+        tmp = currentFocus.split("/")
+        return [pid, tmp[0], tmp[1]] 
     else:
         eprint("⚠️  Device might be locked... (mCurrentFocus={})".format(currentFocus))
-        return [currentFocus, ""]
+        return [pid, currentFocus, ""]

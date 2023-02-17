@@ -10,6 +10,7 @@ rpc.exports = {
                 var clipboardManager = Java.cast(context.getSystemService("clipboard"), ClipboardManager);
             } catch (exception) {
                 send("Please open target app first.");
+                send(exception)
                 return;
             }
 
@@ -38,6 +39,7 @@ rpc.exports = {
                 var clipboardManager = Java.cast(context.getSystemService("clipboard"), ClipboardManager);
             } catch (exception) {
                 send("Please open target app first.");
+                send(exception)
                 return;
             }
 

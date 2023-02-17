@@ -18,30 +18,32 @@ def get_js_hook(js_filename):
     return pkg_resources.resource_string("frida_android_helper", "frida_hooks/{}".format(js_filename)).decode("utf-8")
 
 
-def load_script_with_device(device, pkg_name, js_file):
+def load_script_with_device(device, pid, js_file):
     js_code = get_js_hook(js_file)
     device = frida.get_device(device.get_serial_no())
-    session = device.attach(pkg_name)
+    procs = device.enumerate_processes([int(pid)])
+    session = device.attach(procs[0].name)
     script = session.create_script(js_code)
     script.on("message", message_callback)
     script.load()
     return script
 
 
-def disable_secure_flag(device, pkg_name, activity_name):
-    print('📦 {}'.format(pkg_name))
-    script = load_script_with_device(device, pkg_name, "disable_secure_flag.js")
+def disable_secure_flag(device, pid, activity_name):
+    print('📦 {}'.format(pid))
+    script = load_script_with_device(device, pid, "disable_secure_flag.js")
     script.exports.disablesecureflag(activity_name)
 
 
-def copy_from_clipboard(device, pkg_name):
-    print('📦 {}'.format(pkg_name))
-    script = load_script_with_device(device, pkg_name, "clipboard.js")
+def copy_from_clipboard(device, pid):
+    print('📦 {}'.format(pid))
+    script = load_script_with_device(device, pid, "clipboard.js")
     script.exports.copyfromclipboard()
 
 
-def paste_to_clipboard(device, pkg_name, data):
+def paste_to_clipboard(device, pid, data):
     print("data: '{}'".format(data))
-    print('📦 {}'.format(pkg_name))
-    script = load_script_with_device(device, pkg_name, "clipboard.js")
+    print('📦 {}'.format(pid))
+    
+    script = load_script_with_device(device, pid, "clipboard.js")
     script.exports.pastetoclipboard(data)
