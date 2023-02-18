@@ -7,7 +7,7 @@ def copy_from_clipboard():
     for device in get_devices():
         eprint("📲 Device: {} ({})".format(get_device_model(device), device.get_serial_no()))
         pid, app, activity = get_current_app_focus(device)
-        frida_utils.copy_from_clipboard(device, pid)
+        frida_utils.copy_from_clipboard(device, pid, app)
 
 
 def paste_to_clipboard(data):
@@ -15,5 +15,5 @@ def paste_to_clipboard(data):
     for device in get_devices():
         eprint("📲 Device: {} ({})".format(get_device_model(device), device.get_serial_no()))
         pid, app, activity = get_current_app_focus(device)
-        frida_utils.paste_to_clipboard(device, pid, data)
+        frida_utils.paste_to_clipboard(device, pid, app, data)
 

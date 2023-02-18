@@ -62,7 +62,7 @@ def get_current_app_focus(device: Device):
     # Sample: mCurrentFocus=Window{127ced0 u0 com.android.launcher3/com.android.searchlauncher.SearchLauncher}
     # When locked: mCurrentFocus=Window{8f41b66 u0 StatusBar}
     
-    pid = perform_cmd(device, "dumpsys activity | grep top-activity | cut -d':' -f 3 | awk '{ print $2 }' | head -n 1")
+    pid = perform_cmd(device, "dumpsys activity | grep top-activity | cut -d':' -f 3 | awk '{ print $2 }' | head -n 1").strip()
     result = perform_cmd(device, "dumpsys activity top | grep " + pid)
 
     currentFocus = result.strip().split(" ")[1]
